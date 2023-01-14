@@ -1,0 +1,90 @@
+# This file is part of the Sylius package.
+# (c) Paweł Jędrzejewski
+
+sylius_fixtures:
+    suites:
+        melted_cheese:
+            fixtures:
+                cut_cheese_taxon:
+                    name: taxon
+                    options:
+                        custom:
+                            category:
+                                code: 'MENU_CATEGORY'
+                                name: 'Category'
+                                translations:
+                                    en_US:
+                                        name: 'Category'
+                                    fr_FR:
+                                        name: 'Catégorie'
+                                children:
+                                    -   code: 'cutcheese'
+                                        name: 'cutcheese'
+                                        slug: 'cutcheese'
+                                        translations:
+                                            en_US:
+                                                name: 'Cut cheese'
+                                            fr_FR:
+                                                name: 'Fromage à la coupe'
+                                        children:
+                                            -   code: 'sheep_cheese'
+                                                translations:
+                                                    en_US:
+                                                        name: 'Sheep'
+                                                        slug: 'cutcheese/sheep'
+                                                    fr_FR:
+                                                        name: 'Brebis'
+                                                        slug: 'fromage_coupe/brebis'
+
+                                            -   code: 'cow_cheese'
+                                                translations:
+                                                    en_US:
+                                                        name: 'Cow'
+                                                        slug: 'cutcheese/cow'
+                                                    fr_FR:
+                                                        name: 'Vache'
+                                                        slug: 'fromage_coupe/vache'
+
+                cut_cheese_attribute:
+                    name: product_attribute
+                    options:
+                        custom:
+                            -   name: 'Refining'
+                                code: 'refining'
+                                type: 'text'
+
+                            -   name: 'Season'
+                                code: 'season'
+                                type: 'text'
+
+                cut_cheese_product:
+                    name: product
+                    options:
+                        custom:
+                            -   name: 'Fromage de Brebis'
+                                tax_category: 'other'
+                                channels:
+                                    - 'CHEESE_WEB'
+                                main_taxon: 'sheep_cheese'
+                                taxons:
+                                    - 'cutcheese'
+                                    - 'sheep_cheese'
+                                product_attributes:
+                                    refining: '6 mois'
+                                    season: 'Eté/Printemps'
+                                images:
+                                    - { path: 'App/public/build/shop/images/tomme-des-templiers.jpg', type: 'main' }
+
+                            -   name: 'Fromage de Vache'
+                                tax_category: 'other'
+                                channels:
+                                    - 'CHEESE_WEB'
+                                main_taxon: 'sheep_cheese'
+                                taxons:
+                                    - 'cutcheese'
+                                    - 'cow_cheese'
+                                product_attributes:
+                                    refining: '3 mois'
+                                    season: 'Automne/Hiver'
+                                images:
+                                    - { path: 'App/public/build/shop/images/cantal-fermier-entre-deux.jpg', type: 'main' }

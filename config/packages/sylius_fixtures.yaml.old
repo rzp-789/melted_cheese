@@ -1,0 +1,4 @@
+imports:
+    - { resource: "dev/fixtures/shop_configuration.yaml" }
+    - { resource: "dev/fixtures/custom_fixtures.yaml" }
+    - { resource: "dev/fixtures/cutcheese.yaml" }

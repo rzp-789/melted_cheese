@@ -1,0 +1,7 @@
+sylius_paypal_webhook:
+    resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
+
+app_newsletter_subscribe :
+    path: /{_locale}/newsletter
+    methods: [GET, POST]
+    controller: App\Controller\Shop\NewsletterController::subscribe

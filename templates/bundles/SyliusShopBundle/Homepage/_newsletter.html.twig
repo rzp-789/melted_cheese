@@ -1,0 +1,26 @@
+<div class="ui very padded secondary segment newsletter">
+    <div class="ui bottom aligned grid">
+        <div class="doubling two column row">
+            <div class="column">
+                <h2 class="ui huge header">
+                    {{ 'sylius.homepage.newsletter'|trans }}
+                </h2>
+                <p>
+                    {{ 'sylius.homepage.newsletter_description'|trans|raw }}
+                </p>
+            </div>
+            <div class="column">
+                <form class="ui form" action="{{ path('app_newsletter_subscribe') }}" method="post">
+                    <div class="newsletter-input">
+                        <input type="email" name="newsletter-email" placeholder="{{ 'sylius.ui.email'|trans }}">
+                    </div>
+                    <div class="newsletter-button">
+                        <button type="submit" class="ui button">{{ 'sylius.homepage.subscribe'|trans }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui hidden divider"></div>
