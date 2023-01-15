@@ -46,12 +46,12 @@ final class OrderItemListener
                 $productItem->setWeight($productItem->getQuantity()/1000);
                 $productItem->setUnitPrice(intval($productvariant->getChannelPricings()->getValues()[0]->getPrice() * $productItem->getWeight()));
                 $productItem->setImmutable(true);
+                // Set quantity to 1 need to manage it to recalcul the stock and use weight instead quantity for product cuttype
                 $this->quantityModifier->modify($productItem, 1);
                 $this->entityManager->persist($productItem);
                 $this->entityManager->flush();
             }
-
-            $this->orderProcessor->process($order);
         }
+        $this->orderProcessor->process($order);
     }
 }
