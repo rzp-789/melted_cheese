@@ -73,6 +73,8 @@ class TaxonFixtures extends Fixture
                 }
             }
         }
+
+        $this->addMenuTaxonOnChannel($manager);
     }
 
     public function createMainTaxon($manager)
@@ -108,15 +110,30 @@ class TaxonFixtures extends Fixture
 
         // Get Translation
         $taxonTranslation = $taxon->getTranslation('fr_FR');
+        $taxonTranslation->setSlug($slugifiedName);
+        $taxonTranslation->setName($taxonArray['description']);
 
         $taxon->setEnabled(true);
 
-        //$manager->persist($taxonTranslation);
+        $manager->persist($taxonTranslation);
         $manager->persist($taxon);
 
         $manager->flush();
 
         return $taxon;
+    }
+
+    public function addMenuTaxonOnChannel($manager)
+    {
+        $taxonRepository = $this->container->get('sylius.repository.taxon');
+        $menuTaxon = $taxonRepository->findOneBy(['level' => 0]);
+        $channel = $this->getReference(ChannelFixtures::CHANNEL_REFERENCE);
+
+        $channel->setMenuTaxon($menuTaxon);
+
+        $manager->persist($channel);
+
+        $manager->flush();
     }
 
 }

@@ -16,8 +16,22 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
     private const PRODUCT_ATTRIBUTES = [
-        "Refining",
-        "Season"
+        0 => [
+            "name" => "Refining",
+            "type" => "text"
+        ],
+        1 => [
+            "name" => "Season",
+            "type" => "text"
+        ],
+        2 => [
+            "name" => "Freshing",
+            "type" => "checkbox"
+        ],
+        3 => [
+            "name" => "CutType",
+            "type" => "checkbox"
+        ],
     ];
     private const PRODUCTS = [
         "cheep-cheese" => [
@@ -26,7 +40,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage qui provient du coeur du pays basque.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => false,
+                    "cuttype" => true
                 ]
             ],
             1 => [
@@ -34,7 +50,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "un fromage de brebis pure souche Ossau Iraty.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => false,
+                    "cuttype" => true
                 ]
             ]
         ],
@@ -44,7 +62,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage de vache du canada.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => false,
+                    "cuttype" => true
                 ]
             ],
             1 => [
@@ -52,7 +72,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage de vache turc.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => false,
+                    "cuttype" => true
                 ]
             ]
         ],
@@ -62,7 +84,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage de chèvre qui provient de rocamadour.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => false,
+                    "cuttype" => false
                 ]
             ],
             1 => [
@@ -70,7 +94,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage rafraîchissant l'été.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => true,
+                    "cuttype" => false
                 ]
             ]
         ],
@@ -80,7 +106,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage bleu authentique d'Auvergne.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => true,
+                    "cuttype" => false
                 ]
             ],
             1 => [
@@ -88,7 +116,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 "description" => "Un fromage de bleu de roquefort pour agrémenter vos lasagnes.",
                 "attributes" => [
                     "refining" => "6mois",
-                    "season" => "Printemps/Eté"
+                    "season" => "Printemps/Eté",
+                    "freshing" => true,
+                    "cuttype" => false
                 ]
             ]
         ],
@@ -167,6 +197,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
         // add cms elements
         $productTranslation->setDescription($productArray['description'].$productArray['description']);
+        $productTranslation->setName($productArray['name']);
         $productTranslation->setSlug($slugifiedName);
         $productTranslation->setShortDescription($productArray['description']);
 
@@ -199,11 +230,12 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public function createProductAttributes($manager)
     {
         $productAttributeFactory = $this->container->get('sylius.factory.product_attribute');
-        foreach(self::PRODUCT_ATTRIBUTES as $productAttributeName) {
-            $productAttribute = $productAttributeFactory->createTyped('text');
+        foreach(self::PRODUCT_ATTRIBUTES as $productAttributeData) {
+            $productAttribute = $productAttributeFactory->createTyped($productAttributeData['type']);
 
-            $productAttribute->setName($productAttributeName);
-            $productAttribute->setCode(strtolower($this->slugger->slug($productAttributeName)->toString()));
+            $productAttribute->setName($productAttributeData['name']);
+            $productAttribute->setCode(strtolower($this->slugger->slug($productAttributeData['name'])->toString()));
+
             $this->container->get('sylius.repository.product_attribute')->add($productAttribute);
         }
 

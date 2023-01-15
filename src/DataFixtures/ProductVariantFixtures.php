@@ -62,7 +62,7 @@ class ProductVariantFixtures extends Fixture implements DependentFixtureInterfac
         $productVariant->setCurrentLocale('fr_FR');
         $productVariant->setOnHold(0);
         $productVariant->setOnHand(100);
-        $productVariant->setTracked(true);
+        $productVariant->setTracked(false);
         $productVariant->setPosition(1);
         $productVariant->setShippingRequired(false);
         $productVariant->setVersion(1);
@@ -74,7 +74,7 @@ class ProductVariantFixtures extends Fixture implements DependentFixtureInterfac
         $channelPricing->setProductVariant($productVariant);
         $channelPricing->setChannelCode($channel->getCode());
         $channelPricing->setPrice(random_int(500,2500));
-        $channelPricing->setOriginalPrice(random_int($channelPricing->getPrice(),255000));
+        //$channelPricing->setOriginalPrice(random_int($channelPricing->getPrice(),255000));
 
         $productVariant->addChannelPricing($channelPricing);
         $product->addVariant($productVariant);

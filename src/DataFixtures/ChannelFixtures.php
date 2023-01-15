@@ -43,12 +43,6 @@ class ChannelFixtures extends Fixture
             $locale_fr = $this->createLocale($manager, 'fr_FR');
         }
 
-        // // create second en_GB locale
-        // $locale_en = $this->container->get('sylius.repository.locale')->findOneByCode('en_US');
-        // if (empty($locale_en)) {
-        //     $locale_en = $this->createLocale($manager, 'en_US');
-        // }
-
         // create FR country
         $country = $this->container->get('sylius.repository.country')->findOneByCode('FR');
         if (empty($country)) {

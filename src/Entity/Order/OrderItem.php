@@ -13,4 +13,33 @@ use Sylius\Component\Core\Model\OrderItem as BaseOrderItem;
  */
 class OrderItem extends BaseOrderItem
 {
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weight;
+
+    /**
+     * Get the value of weight
+     */ 
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Set the value of weight
+     *
+     * @return  self
+     */
+    public function setWeight(?float $weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getPriceByWeight(): int
+    {
+        return $this->weight * $this->unitPrice;
+    }
 }

@@ -48,3 +48,8 @@ sylius:
                 header: 'Votre compte'
                 order_history: 'Historique des commandes'
                 personal_information: 'Informations personnelles'
+    ui:
+        quantity_cuttype: "Veuillez saisir un poids en gramme ( entre 100 gr et 30 000 gr)"
+        quantity_unit: "Veuillez saisir le nombre d'unité désirée ( entre 1 et 99 ): "
+        suffix_price_cuttype: "/kg"
+        suffix_price_unit: "/unité"

@@ -34,6 +34,15 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    app.form.extension.type.cart_item:
+        class: App\Form\Extensions\CartItemTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\OrderBundle\Form\Type\CartItemType }
+    app.event.order_item.pre_add:
+        class: App\EventListener\OrderItemListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculTotalForProductCutTypeAfterFlush }
+
     # App\Fixtures\Suite\MeltedCheeseSuiteRegistryDecorator:
     #     decorates: 'sylius_fixtures.suite_registry'
     #     arguments:
