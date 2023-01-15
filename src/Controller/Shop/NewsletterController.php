@@ -19,25 +19,31 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\Manager\NewsletterManager;
 
 class NewsletterController extends AbstractController
 {
-    // private ContainerInterface $container;
-    // public function __construct(ContainerInterface $container)
-    // {
-    //     $this->container = $container;
-    // }
+
+    public function __construct(private NewsletterManager $newsletterManager)
+    {
+        $this->newsletterManager = $newsletterManager;
+    }
 
     public function subscribe(Request $request): Response
     {
-        dump($request->request->all());
-        dd('stop');
-        // $currentBoat = $this->container->get('app.repository.exploris_boat')->findOneById($boatId);
+        $email = $request->request->get("newsletter-email");
+        if(!empty($email)) {
+            $return = $this->newsletterManager->createNewsletter($email);
+            if($return) {
+                $this->addFlash('success', 'Votre inscription est bien prise en compte.');
+            }else {
+                $this->addFlash('error', 'Votre email est déjà enregistré.');
+            }
+        } else {
+            $this->addFlash('error', 'Aucun email saisi');
+        }
 
-        // return $this->render('@SyliusShop/ExplorisBoat/_show.html.twig', [
-        //     'boat' => $currentBoat
-        // ]);
-        return new JsonResponse();
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('sylius_homepage');
 
     }
 }
