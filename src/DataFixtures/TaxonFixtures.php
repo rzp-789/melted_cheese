@@ -9,8 +9,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class TaxonFixtures extends Fixture
+class TaxonFixtures extends Fixture implements DependentFixtureInterface
 {
     public const MAIN_TAXON = " Categorie";
     public const TAXON_LEVEL_1 = [
@@ -57,6 +58,13 @@ class TaxonFixtures extends Fixture
     public function __construct(ContainerInterface $container, private SluggerInterface $slugger)
     {
         $this->container = $container;
+    }
+
+    public function getDependencies()
+    {
+        return [
+            ShopConfigurationFixtures::class,
+        ];
     }
 
     public function load(ObjectManager $manager)
@@ -127,7 +135,7 @@ class TaxonFixtures extends Fixture
     {
         $taxonRepository = $this->container->get('sylius.repository.taxon');
         $menuTaxon = $taxonRepository->findOneBy(['level' => 0]);
-        $channel = $this->getReference(ChannelFixtures::CHANNEL_REFERENCE);
+        $channel = $this->getReference(ShopConfigurationFixtures::CHANNEL_REFERENCE);
 
         $channel->setMenuTaxon($menuTaxon);
 

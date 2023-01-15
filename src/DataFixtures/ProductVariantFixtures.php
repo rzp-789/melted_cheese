@@ -35,7 +35,7 @@ class ProductVariantFixtures extends Fixture implements DependentFixtureInterfac
     {
         return [
             ProductFixtures::class,
-            ChannelFixtures::class,
+            ShopConfigurationFixtures::class,
             VatFixtures::class,
         ];
     }
@@ -44,7 +44,7 @@ class ProductVariantFixtures extends Fixture implements DependentFixtureInterfac
     {
         $productRepository = $this->container->get('sylius.repository.product');
         $products = $productRepository->findAll();
-        $channel = $this->getReference(ChannelFixtures::CHANNEL_REFERENCE);
+        $channel = $this->getReference(ShopConfigurationFixtures::CHANNEL_REFERENCE);
         $taxCategory = $this->getReference(VatFixtures::VAT_REFERENCE);
 
         foreach($products as $product){
@@ -62,7 +62,10 @@ class ProductVariantFixtures extends Fixture implements DependentFixtureInterfac
         $productVariant->setCurrentLocale('fr_FR');
         $productVariant->setOnHold(0);
         $productVariant->setOnHand(100);
-        $productVariant->setTracked(false);
+        if($product->getAttributeByCodeAndLocale('cuttype')->getValue()) {
+            $productVariant->setOnHand(100000);
+        }
+        $productVariant->setTracked(true);
         $productVariant->setPosition(1);
         $productVariant->setShippingRequired(false);
         $productVariant->setVersion(1);

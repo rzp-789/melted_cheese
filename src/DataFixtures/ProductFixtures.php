@@ -137,7 +137,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             TaxonFixtures::class,
-            ChannelFixtures::class,
+            ShopConfigurationFixtures::class,
         ];
     }
 
@@ -146,7 +146,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         $taxonRepository = $this->container->get('sylius.repository.taxon');
         $taxons = $taxonRepository->findBy(['level' => 2]);
 
-        $channel = $this->getReference(ChannelFixtures::CHANNEL_REFERENCE);
+        $channel = $this->getReference(ShopConfigurationFixtures::CHANNEL_REFERENCE);
 
         $this->createProductAttributes($manager);
         // Create cheeses
