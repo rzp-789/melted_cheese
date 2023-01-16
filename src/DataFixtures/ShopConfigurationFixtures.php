@@ -60,13 +60,6 @@ class ShopConfigurationFixtures extends Fixture
             $country = $this->createCountry($manager, $codeCountry);
         }
 
-        // create FR Zone
-        $zone = $this->container->get('sylius.repository.zone')->findOneByCode('FR-France');
-        if (empty($zone)) {
-            $code = 'FR-France';
-            $zone = $this->createZone($manager, $code);
-        }
-
         // create BR Zone
         $zone = $this->container->get('sylius.repository.zone')->findOneByCode('BR-Bresil');
         if (empty($zone)) {
@@ -74,11 +67,19 @@ class ShopConfigurationFixtures extends Fixture
             $zone = $this->createZone($manager, $code);
         }
 
-        // create MeltedCheese Channel
-        $channel = $this->createChannel($manager, $currency, $locale_fr);
+        // create FR Zone
+        $zone = $this->container->get('sylius.repository.zone')->findOneByCode('FR-France');
+        if (empty($zone)) {
+            $code = 'FR-France';
+            $zone = $this->createZone($manager, $code);
+        }
 
-        // $this->createPaymentMethod($manager, $channel);
-        // $this->createShippingMethod($manager, $channel);
+        // create MeltedCheese Channel
+        $channel = $this->createChannel($manager, $currency, $locale_fr, $zone);
+
+        $gateway = $this->createGateway($manager);
+        $this->createPaymentMethod($manager, $channel, $gateway);
+        $this->createShippingMethod($manager, $channel, $zone);
 
     }
 
@@ -105,7 +106,7 @@ class ShopConfigurationFixtures extends Fixture
         return $zone;
     }
 
-    public function createChannel($manager, $currency, $locale_fr)
+    public function createChannel($manager, $currency, $locale_fr, $zone)
     {
         $channel = new Channel();
 
@@ -119,6 +120,7 @@ class ShopConfigurationFixtures extends Fixture
         $channel->addLocale($locale_fr);
         $channel->setContactEmail(self::CHANNEL_REFERENCE.'@gmail.com');
         $channel->setAccountVerificationRequired(false);
+        $channel->setDefaultTaxZone($zone);
 
         $manager->persist($channel);
         $manager->flush();
@@ -148,44 +150,53 @@ class ShopConfigurationFixtures extends Fixture
         return $locale;
     }
 
-    // public function createPaymentMethod($manager, $channel)
-    // {
-    //     $paymentMethodCash = $this->container->get('sylius.factory.payment_method')->createNew();
-    //     $paymentMethodCash->setCode('cash_on_delivery');
-    //     $paymentMethodCash->setName('Cash on delivery');
-    //     $paymentMethodCash->addChannel($channel);
-    //     $paymentMethodCash->setEnabled(true);
-
-    //     $this->container->get('sylius.repository.payment_method')->add($paymentMethodCash);
-
-
-    //     $paymentMethodBankTransfer = $this->container->get('sylius.factory.payment_method')->createNew();
-    //     $paymentMethodBankTransfer->setCode('bank_transfer');
-    //     $paymentMethodBankTransfer->setName('Bank transfer');
-    //     $paymentMethodBankTransfer->addChannel($channel);
-    //     $paymentMethodBankTransfer->setEnabled(true);
+    public function createPaymentMethod($manager, $channel, $gateway)
+    {
+        $paymentMethodCash = $this->container->get('sylius.factory.payment_method')->createNew();
+        $paymentMethodCash->setCode('cash_on_delivery');
+        $paymentMethodCash->setName('Cash on delivery');
+        $paymentMethodCash->addChannel($channel);
+        $paymentMethodCash->setEnabled(true);
+        $paymentMethodCash->setGatewayConfig($gateway);
 
 
-    //     $this->container->get('sylius.repository.payment_method')->add($paymentMethodBankTransfer);
-    // }
+        $this->container->get('sylius.repository.payment_method')->add($paymentMethodCash);
 
-    // public function createShippingMethod($manager, $channel)
-    // {
-    //     $zones = $this->container->get('sylius.repository.zone')->findAll();
+        $paymentMethodBankTransfer = $this->container->get('sylius.factory.payment_method')->createNew();
+        $paymentMethodBankTransfer->setCode('bank_transfer');
+        $paymentMethodBankTransfer->setName('Bank transfer');
+        $paymentMethodBankTransfer->addChannel($channel);
+        $paymentMethodBankTransfer->setEnabled(true);
+        $paymentMethodBankTransfer->setGatewayConfig($gateway);
 
-    //     foreach($zones as $zone ) {
-    //         $shippingMethod = $this->container->get('sylius.factory.shipping_method')->createNew();
-    //         $shippingMethod->setCode('ups');
-    //         $shippingMethod->setName('Ups');
-    //         $shippingMethod->setCalculator(DefaultCalculators::FLAT_RATE);
-    //         $shippingMethod->setConfiguration(['amount' => 50]);
-    //         $shippingMethod->setZone($zone);
-    //         $shippingMethod->setEnabled(true);
-    //         $this->container->get('sylius.repository.shipping_method')->add($shippingMethod);
 
-    //         // $channel->addShippingMethod($shippingMethod);
-    //     }
+        $this->container->get('sylius.repository.payment_method')->add($paymentMethodBankTransfer);
+    }
 
-    // }
+    public function createShippingMethod($manager, $channel, $zone)
+    {
+        $shippingMethod = $this->container->get('sylius.factory.shipping_method')->createNew();
+        $shippingMethod->setCode('ups');
+        $shippingMethod->setName('Ups');
+        $shippingMethod->setCalculator(DefaultCalculators::FLAT_RATE);
+        $shippingMethod->setConfiguration(['amount' => 50]);
+        $shippingMethod->setZone($zone);
+        $shippingMethod->setEnabled(true);
+        $this->container->get('sylius.repository.shipping_method')->add($shippingMethod);
+
+    }
+
+    public function createGateway()
+    {
+        $gateway = $this->container->get('sylius.factory.gateway_config')->createNew();
+
+        $gateway->setConfig([]);
+        $gateway->setGatewayName('gateway');
+        $gateway->setFactoryName('gateway_name');
+
+        $this->container->get('sylius.repository.gateway_config')->add($gateway);
+
+        return $gateway;
+    }
 
 }

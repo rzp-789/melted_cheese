@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
-use Sylius\Component\Order\Modifier\OrderModifierInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
-
 
 /**
  * OrderItemListener
@@ -50,8 +46,10 @@ final class OrderItemListener
                 $this->quantityModifier->modify($productItem, 1);
                 $this->entityManager->persist($productItem);
                 $this->entityManager->flush();
+                $this->orderProcessor->process($order);
             }
         }
         $this->orderProcessor->process($order);
+
     }
 }
