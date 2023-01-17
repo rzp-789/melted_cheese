@@ -22,6 +22,17 @@ class ShopConfigurationFixtures extends Fixture
 
     public const CURRENCIES = ['USD', 'EUR'];
 
+    public const COUNTRIES = ['BR', 'FR'];
+
+    public const ZONES = [
+        "FR_BR" => [
+            "code" => "FR_BR",
+            "name" => "Zone France - Brésil",
+            "type" => "country",
+            "scope" => "all"
+        ]
+    ];
+
     private $container;
 
     public function __construct(
@@ -46,33 +57,23 @@ class ShopConfigurationFixtures extends Fixture
             $locale_fr = $this->createLocale($manager, 'fr_FR');
         }
 
-        // create FR country
-        $country = $this->container->get('sylius.repository.country')->findOneByCode('FR');
-        if (empty($country)) {
-            $codeCountry = 'FR';
-            $country = $this->createCountry($manager, $codeCountry);
+        //Create Countries
+        foreach(self::COUNTRIES as $countryData) {
+            $country = $this->container->get('sylius.repository.country')->findOneByCode($countryData);
+            if (empty($country)) {
+                $country = $this->createCountry($manager, $countryData);
+            }
         }
 
-        // create BR country
-        $country = $this->container->get('sylius.repository.country')->findOneByCode('BR');
-        if (empty($country)) {
-            $codeCountry = 'BR';
-            $country = $this->createCountry($manager, $codeCountry);
+        //create Zone
+        foreach(self::ZONES as $zoneData) {
+            $zone = $this->container->get('sylius.repository.zone')->findOneByCode($zoneData['code']);
+            if (empty($zone)) {
+                $zone = $this->createZone($manager, $zoneData);
+            }
         }
 
-        // create BR Zone
-        $zone = $this->container->get('sylius.repository.zone')->findOneByCode('BR-Bresil');
-        if (empty($zone)) {
-            $code = 'BR-Bresil';
-            $zone = $this->createZone($manager, $code);
-        }
-
-        // create FR Zone
-        $zone = $this->container->get('sylius.repository.zone')->findOneByCode('FR-France');
-        if (empty($zone)) {
-            $code = 'FR-France';
-            $zone = $this->createZone($manager, $code);
-        }
+        $this->createZoneMember($zone);
 
         // create MeltedCheese Channel
         $channel = $this->createChannel($manager, $currency, $locale_fr, $zone);
@@ -93,12 +94,12 @@ class ShopConfigurationFixtures extends Fixture
         $manager->flush();
     }
 
-    public function createZone($manager, $code)
+    public function createZone($manager, $zoneData)
     {
         $zone = new Zone();
-        $zone->setCode($code);
-        $zone->setName($code);
-        $zone->setType('country');
+        $zone->setCode($zoneData['code']);
+        $zone->setName($zoneData['name']);
+        $zone->setType($zoneData['type']);
 
         $manager->persist($zone);
         $manager->flush();
@@ -182,6 +183,7 @@ class ShopConfigurationFixtures extends Fixture
         $shippingMethod->setConfiguration(['amount' => 50]);
         $shippingMethod->setZone($zone);
         $shippingMethod->setEnabled(true);
+        $shippingMethod->addChannel($channel);
         $this->container->get('sylius.repository.shipping_method')->add($shippingMethod);
 
     }
@@ -197,6 +199,21 @@ class ShopConfigurationFixtures extends Fixture
         $this->container->get('sylius.repository.gateway_config')->add($gateway);
 
         return $gateway;
+    }
+
+    public function createZoneMember($zone)
+    {
+        $zoneMemberRepository = $this->container->get('sylius.repository.zone_member');
+        $zoneMemberFactory = $this->container->get('sylius.factory.zone_member');
+        foreach(self::COUNTRIES as $country) {
+            $zoneMember = $zoneMemberRepository->findOneByCode($country);
+            if (empty($zoneMember)) {
+                $zoneMember = $zoneMemberFactory->createNew();
+                $zoneMember->setBelongsTo($zone);
+                $zoneMember->setCode($country);
+                $zoneMemberRepository->add($zoneMember);
+            }
+        }
     }
 
 }

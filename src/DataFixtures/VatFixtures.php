@@ -77,9 +77,9 @@ class VatFixtures extends Fixture implements FixtureGroupInterface
             $taxRate->setAmount($rate / 100);
             $taxRate->setCalculator('default');
 
-            $zone = $this->container->get('sylius.repository.zone')->findOneBy(['code' => 'FR-France']);
+            $zone = $this->container->get('sylius.repository.zone')->findOneBy(['code' => 'FR_BR']);
             if (!$zone) {
-                $zone = $this->container->get('sylius.repository.zone')->findOneBy(['code' => 'FR-Paris']);
+                $zone = $this->container->get('sylius.repository.zone')->findOneBy(['code' => 'FR_BR']);
             }
 
             $taxRate->setZone($zone);

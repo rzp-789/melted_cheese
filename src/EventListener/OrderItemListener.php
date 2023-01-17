@@ -34,7 +34,7 @@ final class OrderItemListener
         $productItem = $ressourceEvent->getSubject();
         $product = $ressourceEvent->getSubject()->getVariant()->getProduct();
         $productvariant = $ressourceEvent->getSubject()->getVariant();
-        $attributeCutType = $product->getAttributeByCodeAndLocale('cuttype')->getValue();
+        $attributeCutType = $product->hasAttributeByCodeAndLocale('cuttype') ? $product->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
         $order = $productItem->getOrder();
 
         if(!empty($attributeCutType)) {
