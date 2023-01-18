@@ -2,7 +2,7 @@
 
 {% set variant = product|sylius_resolve_variant %}
 {% set hasDiscount = variant|sylius_has_discount({'channel': sylius.channel}) %}
-
+{{dump(product.hasAttributeByCodeAndLocale('cuttype'))}}
 {% if product.hasAttributeByCodeAndLocale('cuttype') and product.getAttributeByCodeAndLocale('cuttype').value %}
     {% set setSuffixPrice = "sylius.ui.suffix_price_cuttype"|trans %}
 {% else %}

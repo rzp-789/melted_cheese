@@ -49,6 +49,7 @@ final class OrderItemListener
                 $this->orderProcessor->process($order);
             }
         }
+        dump($order);
         $this->orderProcessor->process($order);
 
     }

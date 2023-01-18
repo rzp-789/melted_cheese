@@ -24,20 +24,20 @@ class CartItemTypeExtension extends AbstractTypeExtension
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // if(!empty($options['product']) && $options['product']->getAttributeByCodeAndLocale('cuttype')->getValue()) {
-        //     $builder
-        //     ->add('quantity', IntegerType::class, [
-        //         'attr' => ['min' => 100, 'max' => 30000],
-        //         'label' => 'sylius.ui.quantity_cuttype'
+        if(!empty($options['product']) && $options['product']->getAttributeByCodeAndLocale('cuttype')->getValue()) {
+            $builder
+            ->add('quantity', IntegerType::class, [
+                'attr' => ['min' => 100, 'max' => 30000],
+                'label' => 'sylius.ui.quantity_cuttype'
 
-        //     ]);
-        // }else {
-        //     $builder
-        //     ->add('quantity', IntegerType::class, [
-        //         'attr' => ['min' => 1, 'max' => 99],
-        //         'label' => 'sylius.ui.quantity_unit'
-        //     ]);
-        // }
+            ]);
+        }else {
+            $builder
+            ->add('quantity', IntegerType::class, [
+                'attr' => ['min' => 1, 'max' => 99],
+                'label' => 'sylius.ui.quantity_unit'
+            ]);
+        }
 
     }
 
