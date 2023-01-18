@@ -35,7 +35,7 @@ class NewsletterController extends AbstractController
     {
         $email = $request->request->get("newsletter-email");
         if(!empty($email)) {
-            $return = $this->newsletterManager->createNewsletter($email);
+            $return = $this->newsletterManager->createNewsletter($email, $this->getUser());
             if($return) {
                 $this->addFlash('success', $this->translation->trans('sylius.newsletter.success'));
             }else {

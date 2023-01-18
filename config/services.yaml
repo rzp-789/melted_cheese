@@ -41,7 +41,7 @@ services:
     app.event.order_item.pre_add:
         class: App\EventListener\OrderItemListener
         tags:
-            - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculTotalForProductCutTypeAfterFlush }
+            - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculCartAfterFlush }
 
     # App\Fixtures\Suite\MeltedCheeseSuiteRegistryDecorator:
     #     decorates: 'sylius_fixtures.suite_registry'

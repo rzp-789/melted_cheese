@@ -1,0 +1,7 @@
+sylius_resource:
+    resources:
+        app.newsletter:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\Newsletter
+                repository: App\Repository\NewsletterRepository

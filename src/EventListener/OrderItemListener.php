@@ -9,6 +9,7 @@ use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * OrderItemListener
@@ -18,25 +19,37 @@ final class OrderItemListener
     public function __construct(
         private EntityManagerInterface $entityManager,
         private OrderProcessorInterface $orderProcessor,
-        private OrderItemQuantityModifierInterface $quantityModifier
+        private OrderItemQuantityModifierInterface $quantityModifier,
+        private ContainerInterface $container
         )
     {
         $this->entityManager = $entityManager;
         $this->orderProcessor = $orderProcessor;
         $this->quantityModifier = $quantityModifier;
+        $this->container = $container;
 
     }
 
 
-    public function reCalculTotalForProductCutTypeAfterFlush(ResourceControllerEvent $ressourceEvent)
+    public function reCalculCartAfterFlush(ResourceControllerEvent $ressourceEvent)
     {
+        $order = $this->reCalculCutTypeProduct($ressourceEvent);
 
-        $productItem = $ressourceEvent->getSubject();
+        $this->orderProcessor->process($order);
+
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+    }
+
+    public function reCalculCutTypeProduct($ressourceEvent)
+    {
+        // Calcul For Particular product
         $product = $ressourceEvent->getSubject()->getVariant()->getProduct();
+        $productItem = $ressourceEvent->getSubject();
         $productvariant = $ressourceEvent->getSubject()->getVariant();
-        $attributeCutType = $product->hasAttributeByCodeAndLocale('cuttype') ? $product->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
         $order = $productItem->getOrder();
 
+        $attributeCutType = $product->hasAttributeByCodeAndLocale('cuttype') ? $product->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
         if(!empty($attributeCutType)) {
             if(empty($productItem->getWeight())) {
                 $productItem->setWeight($productItem->getQuantity()/1000);
@@ -50,9 +63,18 @@ final class OrderItemListener
             }
         }
 
-        $this->orderProcessor->process($order);
-
-        $this->entityManager->persist($order);
-        $this->entityManager->flush();
+        return $order;
     }
+
+    public function addNewsletterReduction($order)
+    {
+        
+        if(!empty($order->getCustomer())) {
+            $this->container->get('app.repository.newsletter')->findBy(['email' => $order->getCustomer()->getEmail()]);
+        }
+        
+        dump("e");
+    }
+
+
 }

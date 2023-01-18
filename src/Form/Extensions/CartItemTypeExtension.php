@@ -19,16 +19,27 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Sylius\Bundle\OrderBundle\Form\Type\CartItemType;
+use Psr\Container\ContainerInterface;
 
 class CartItemTypeExtension extends AbstractTypeExtension
 {
+
+    public function __construct(
+        private ContainerInterface $containerInterface
+        )
+    {
+        $this->containerInterface = $containerInterface;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $translator = $this->containerInterface->get('translator');
         if(!empty($options['product']) && $options['product']->getAttributeByCodeAndLocale('cuttype')->getValue()) {
             $builder
             ->add('quantity', IntegerType::class, [
                 'attr' => ['min' => 100, 'max' => 30000],
-                'label' => 'sylius.ui.quantity_cuttype'
+                'label' => $translator->trans('sylius.ui.quantity_cuttype'),
+                'data' => 100
 
             ]);
         }else {
