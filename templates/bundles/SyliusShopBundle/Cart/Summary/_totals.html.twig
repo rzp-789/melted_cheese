@@ -3,6 +3,8 @@
 {% set itemsSubtotal = sylius_order_items_subtotal(cart) %}
 {% set taxIncluded = cart.getTaxIncludedTotal() %}
 {% set taxExcluded = cart.getTaxExcludedTotal() %}
+{{dump(cart.promotions.values)}}
+{{dump(cart.shipments.values)}}
 <div class="ui segment">
     <h2 class="ui dividing header">{{ 'sylius.ui.summary'|trans }}</h2>
 
@@ -16,7 +18,11 @@
         </tr>
         {% if cart.orderPromotionTotal %}
             <tr>
-                <td>{{ 'sylius.ui.discount'|trans }}:</td>
+                {% if cart.promotions.values[0] is not null %}
+                    <td>{{cart.promotions.values[0].name}}:<td>
+                {% else %}
+                    <td>{{ 'sylius.ui.discount'|trans }}:<td>
+                {% endif %}
                 <td id="sylius-cart-promotion-total" {{ sylius_test_html_attribute('cart-promotion-total') }} class="right aligned">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</td>
             </tr>
         {% endif %}
@@ -35,15 +41,15 @@
             <td>{{ 'sylius.ui.taxes_total'|trans }}:</td>
             <td class="right aligned">
                 {% if not taxIncluded and not taxExcluded %}
-                    <div id="sylius-cart-tax-none" {{ sylius_test_html_attribute('cart-no-tax') }}>{{ money.convertAndFormat(0) }}Cart1</div>
+                    <div id="sylius-cart-tax-none" {{ sylius_test_html_attribute('cart-no-tax') }}>{{ money.convertAndFormat(0) }}</div>
                 {% endif %}
                 {% if taxExcluded  %}
-                    <div id="sylius-cart-tax-excluded" {{ sylius_test_html_attribute('cart-tax-exluded') }}>{{ money.convertAndFormat(taxExcluded) }}Cart2</div>
+                    <div id="sylius-cart-tax-excluded" {{ sylius_test_html_attribute('cart-tax-exluded') }}>{{ money.convertAndFormat(taxExcluded) }}</div>
                 {% endif %}
                 {% if taxIncluded %}
                     <div class="tax-disabled">
                         <small>({{ 'sylius.ui.included_in_price'|trans }})</small>
-                        <span id="sylius-cart-tax-included" {{ sylius_test_html_attribute('cart-tax-included') }}>{{ money.convertAndFormat(taxIncluded) }}Cart3</span>
+                        <span id="sylius-cart-tax-included" {{ sylius_test_html_attribute('cart-tax-included') }}>{{ money.convertAndFormat(taxIncluded) }}</span>
                     </div>
                 {% endif %}
             </td>

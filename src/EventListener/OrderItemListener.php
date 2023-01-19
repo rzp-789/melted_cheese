@@ -63,18 +63,10 @@ final class OrderItemListener
             }
         }
 
-        return $order;
-    }
+        $this->orderProcessor->process($order);
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
 
-    public function addNewsletterReduction($order)
-    {
-        
-        if(!empty($order->getCustomer())) {
-            $this->container->get('app.repository.newsletter')->findBy(['email' => $order->getCustomer()->getEmail()]);
-        }
-        
-        dump("e");
     }
-
 
 }
