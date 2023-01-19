@@ -39,7 +39,7 @@ class NewsletterController extends AbstractController
             if($return) {
                 $this->addFlash('success', $this->translation->trans('sylius.newsletter.success'));
             }else {
-                $this->addFlash('error', $this->translation->trans('sylius.newsletter.error_double'));
+                $this->addFlash('info', $this->translation->trans('sylius.newsletter.error_double'));
             }
         } else {
             $this->addFlash('error', $this->translation->trans('sylius.newsletter.error'));

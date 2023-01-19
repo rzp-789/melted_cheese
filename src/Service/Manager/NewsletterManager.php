@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Manager;
 
+use App\Entity\Customer\Customer;
 use Psr\Container\ContainerInterface;
 use App\Entity\Newsletter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,28 +25,31 @@ class NewsletterManager
 
     public function createNewsletter($email, $user)
     {
-        // try{
+        try{
             $newsletter = new Newsletter();
             $newsletter->setEmail($email);
             $newsletter->setCreatedAt(new \DateTimeImmutable('now'));
 
-            if($user instanceof ShopUser) {
-                $customer = $user->getCustomer();
-                dump($user->getCustomer());
+            $customer = $this->container->get('sylius.repository.customer')->findOneBy(['email' => $email]);
+
+            if($user instanceof ShopUser || $customer instanceof Customer) {
+                $customer = empty($customer) ? $user->getCustomer() : $customer;
                 $newsletter->setCustomer($customer);
-                $customerGroup = $this->container->get('sylius.repository.sylius_customer_group')->findOneBy(['code' => self::NEWSLETTER_CUSTOMER_GROUP]);
+                $customerGroup = $this->container->get('sylius.repository.customer_group')->findOneBy(['code' => self::NEWSLETTER_CUSTOMER_GROUP]);
                 $customer->setGroup($customerGroup);
+
                 $this->manager->persist($customer);
+                $this->manager->flush();
             }
 
             $this->manager->persist($newsletter);
             $this->manager->flush();
 
             $return = true;
-//         }catch(\Exception $e){
-// dump($e->getMessage());
-//             $return = false;
-//         }
+        }catch(\Exception $e){
+dump($e->getMessage());
+            $return = false;
+        }
 
 
         return $return;
