@@ -38,6 +38,7 @@ services:
         class: App\Form\Extensions\CartItemTypeExtension
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\OrderBundle\Form\Type\CartItemType }
+
     app.event.order_item.pre_add:
         class: App\EventListener\OrderItemListener
         tags:

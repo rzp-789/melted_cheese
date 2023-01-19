@@ -43,7 +43,7 @@ final class OrderItemListener
 
     public function reCalculCutTypeProduct($ressourceEvent)
     {
-        // Calcul For Particular product
+        // Calcul For CutType product
         $product = $ressourceEvent->getSubject()->getVariant()->getProduct();
         $productItem = $ressourceEvent->getSubject();
         $productvariant = $ressourceEvent->getSubject()->getVariant();
@@ -59,13 +59,10 @@ final class OrderItemListener
                 $this->quantityModifier->modify($productItem, 1);
                 $this->entityManager->persist($productItem);
                 $this->entityManager->flush();
-                $this->orderProcessor->process($order);
             }
         }
 
-        $this->orderProcessor->process($order);
-        $this->entityManager->persist($order);
-        $this->entityManager->flush();
+        return $order;
 
     }
 
