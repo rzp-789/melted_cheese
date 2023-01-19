@@ -43,6 +43,24 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculCartAfterFlush }
 
+    app.listener.admin.menu_builder:
+        class: App\Menu\AdminMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
+
+    app.recipe.form.type:
+        class: App\Form\RecipeType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.recipe.class%', ['sylius']]
+
+    app.recipe.create.listener:
+        class: App\EventListener\RecipeListener
+        tags:
+            - { name: kernel.event_listener, event: app.recipe.post_create, method: onRecipePostCreate }
+            - { name: kernel.event_listener, event: app.recipe.post_update, method: onRecipePostUpdate }
+            - { name: kernel.event_listener, event: app.recipe.post_delete, method: onRecipePostDelete }
+
     # App\Fixtures\Suite\MeltedCheeseSuiteRegistryDecorator:
     #     decorates: 'sylius_fixtures.suite_registry'
     #     arguments:

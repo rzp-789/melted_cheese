@@ -5,3 +5,21 @@ app_newsletter_subscribe :
     path: /{_locale}/newsletter
     methods: [GET, POST]
     controller: App\Controller\Shop\NewsletterController::subscribe
+
+app.recipe:
+    resource: |
+        alias: app.recipe
+        section: admin
+        path: /recipe
+        templates: "@SyliusAdmin\\Crud"
+        redirect: index
+        grid: app_recipe
+        vars:
+            all:
+                subheader: Recipe
+                templates:
+                    form: "@SyliusAdmin\\Recipe\\_form.html.twig"
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin

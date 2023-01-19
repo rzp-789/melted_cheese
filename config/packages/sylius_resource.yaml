@@ -5,3 +5,10 @@ sylius_resource:
             classes:
                 model: App\Entity\Newsletter
                 repository: App\Repository\NewsletterRepository
+
+        app.recipe:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\Recipe
+                form: App\Form\RecipeType
+                repository: App\Repository\RecipeRepository

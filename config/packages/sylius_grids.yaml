@@ -1,0 +1,20 @@
+sylius_grid:
+    grids:
+        app_recipe:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Recipe
+            fields:
+                title:
+                    type: string
+                    label: sylius.ui.title
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update 
+                    delete:
+                        type: delete
