@@ -6,6 +6,16 @@ app_newsletter_subscribe :
     methods: [GET, POST]
     controller: App\Controller\Shop\NewsletterController::subscribe
 
+app_recipe_index :
+    path: /{_locale}/recipes
+    methods: [GET, POST]
+    controller: App\Controller\Shop\RecipeController::index
+
+app_recipe_show :
+    path: /{_locale}/recipe/{title}
+    methods: [GET, POST]
+    controller: App\Controller\Shop\RecipeController::show
+
 app.recipe:
     resource: |
         alias: app.recipe

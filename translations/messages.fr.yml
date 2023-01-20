@@ -56,9 +56,10 @@ sylius:
         # quantity_cuttype: "Veuillez saisir un poids en gramme .\n ( entre 100 gr et 30 000 gr)"
         quantity_cuttype: "Veuillez saisir un poids en gramme \r\n entre 100 gr et 30 000 gr"
         quantity_unit: "Veuillez saisir le nombre d'unité désirée ( entre 1 et 99 ): "
-        suffix_price_cuttype: "/kg HT"
-        suffix_price_unit: "/unité HT"
+        suffix_price_cuttype: "/kg"
+        suffix_price_unit: "/unité"
     top_bar: "Inscrivez-vous à la newsletter pour une réduction de 5%"
 app:
     ui:
         recipes: Recettes
+        edit_recipe: Edition de recette

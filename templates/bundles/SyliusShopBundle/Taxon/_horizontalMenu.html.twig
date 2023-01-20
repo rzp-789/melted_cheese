@@ -1,6 +1,5 @@
 {% macro item(taxon) %}
     {% import _self as macros %}
-
     {% if taxon.enabledChildren|length > 0 %}
         <div class="ui dropdown item" {{ sylius_test_html_attribute('menu-item') }}>
             <span class="text">{{ taxon.name }}</span>
@@ -11,6 +10,8 @@
                 {% endfor %}
             </div>
         </div>
+    {% elseif taxon.code is same as "recipe" %}
+        <a href="{{ path('app_recipe_index', {'_locale': taxon.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('menu-item') }}>{{ taxon.name }}</a>
     {% else %}
         <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('menu-item') }}>{{ taxon.name }}</a>
     {% endif %}
@@ -18,9 +19,9 @@
 {% import _self as macros %}
 
 {% if taxons|length > 0 %}
-<div class="ui large stackable menu" {{ sylius_test_html_attribute('menu') }}>
-    {% for taxon in taxons %}
-        {{ macros.item(taxon) }}
-    {% endfor %}
-</div>
+    <div class="ui large stackable menu" {{ sylius_test_html_attribute('menu') }}>
+        {% for taxon in taxons %}
+            {{ macros.item(taxon) }}
+        {% endfor %}
+    </div>
 {% endif %}

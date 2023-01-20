@@ -1,0 +1,10 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+
+    <h1>{{title}}</h1>
+    {% set elements = monsieurbiz_richeditor_get_elements(content) %}
+    {{ elements|monsieurbiz_richeditor_render_elements }}
+
+
+{% endblock %}
