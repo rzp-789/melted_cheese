@@ -57,6 +57,7 @@ final class OrderItemListener
                 $productItem->setImmutable(true);
                 // Set quantity to 1 need to manage it to recalcul the stock and use weight instead quantity for product cuttype
                 $this->quantityModifier->modify($productItem, 1);
+
                 $this->entityManager->persist($productItem);
                 $this->entityManager->flush();
             }
