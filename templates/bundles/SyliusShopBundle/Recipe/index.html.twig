@@ -5,7 +5,7 @@
 <h1>Nos Recettes</h1>
     <ul>
     {% for recipe in recipes %}
-        <strong><li><a href="{{ path('app_recipe_show', {'title': recipe.title }) }}">{{ recipe.title }}</a></li></strong>
+        <strong><li><a href="{{ path('app_shop_recipe_show', {'title': recipe.title }) }}">{{ recipe.title }}</a></li></strong>
     {% endfor %}
     </ul>
 {% endblock %}

@@ -63,3 +63,4 @@ app:
     ui:
         recipes: Recettes
         edit_recipe: Edition de recette
+        new_recipe: Nouvelle recette

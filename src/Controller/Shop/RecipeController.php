@@ -16,11 +16,6 @@ namespace App\Controller\Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Service\Manager\NewsletterManager;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Repository\RecipeRepository;
 
 class RecipeController extends AbstractController
@@ -45,8 +40,8 @@ class RecipeController extends AbstractController
         $recipe = $this->recipeRepository->findOneBy(['title' => $title]);
 
         return new Response($this->renderView('@SyliusShop/Recipe/show.html.twig', [
-            'title' => $recipe->getTitle(),
-            'content' => $recipe->getContent()
+            'title' => $recipe ? $recipe->getTitle() : null,
+            'content' => $recipe ? $recipe->getContent() : null
         ]));
 
     }
