@@ -39,10 +39,10 @@ services:
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\OrderBundle\Form\Type\CartItemType }
 
-    app.event.order_item.pre_add:
-        class: App\EventListener\OrderItemListener
-        tags:
-            - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculCartAfterFlush }
+    # app.event.order_item.pre_add:
+    #     class: App\EventListener\OrderItemListener
+    #     tags:
+    #         - { name: kernel.event_listener, event: sylius.order_item.post_add, method: reCalculCartAfterFlush }
 
     app.listener.admin.menu_builder:
         class: App\Menu\AdminMenuListener
@@ -62,11 +62,17 @@ services:
             - { name: kernel.event_listener, event: app.recipe.post_update, method: onRecipePostUpdate }
             - { name: kernel.event_listener, event: app.recipe.post_delete, method: onRecipePostDelete }
 
-    sylius.calculator.product_variant_price:
-        class: App\Component\Core\Calculator\ProductVariantPriceCalculator
+    # sylius.calculator.product_variant_price:
+    #     class: App\Component\Core\Calculator\ProductVariantPriceCalculator
+    #     autowire: true
+    #     tags:
+    #         - { name: "sylius.price_calculator", priority: 40 }
+
+    sylius.order_processing.order_prices:
+        class: App\Component\Core\OrderProcessing\OrderPricesRecalculator
         autowire: true
         tags:
-            - { name: "sylius.price_calculator", priority: 40 }
+            - { name: "sylius.order_processor", priority: 40 }
 
     # App\Fixtures\Suite\MeltedCheeseSuiteRegistryDecorator:
     #     decorates: 'sylius_fixtures.suite_registry'

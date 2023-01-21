@@ -16,10 +16,19 @@ namespace App\Component\Core\Calculator;
 use Sylius\Component\Core\Exception\MissingChannelConfigurationException;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Calculator\ProductVariantPricesCalculatorInterface;
+use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Webmozart\Assert\Assert;
 
 final class ProductVariantPriceCalculator implements ProductVariantPricesCalculatorInterface
 {
+    public function __construct(
+        private OrderItemQuantityModifierInterface $quantityModifier
+        )
+    {
+        $this->quantityModifier = $quantityModifier;
+
+    }
+
     public function calculate(ProductVariantInterface $productVariant, array $context): int
     {
         Assert::keyExists($context, 'channel');
@@ -29,9 +38,11 @@ final class ProductVariantPriceCalculator implements ProductVariantPricesCalcula
         if (null === $channelPricing || $channelPricing->getPrice() === null) {
             throw MissingChannelConfigurationException::createForProductVariantChannelPricing($productVariant, $context['channel']);
         }
-
-        $returnPrice = $$productVariant->getProduct()->hasAttributeByCodeAndLocale('cuttype') ? $channelPricing->getPrice() / 1000 : $channelPricing->getPrice();
-        return $returnPrice;
+// TODO Recalcul price and put quantity to 1 ( for product cuttype )
+dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+dump($productVariant);
+dump('calculate : '.$channelPricing->getPrice());
+        return $channelPricing->getPrice();
     }
 
     /**
@@ -48,16 +59,15 @@ final class ProductVariantPriceCalculator implements ProductVariantPricesCalcula
         }
 
         if (null !== $channelPricing->getOriginalPrice()) {
-
-            $returnPrice = $$productVariant->getProduct()->hasAttributeByCodeAndLocale('cuttype') ? $channelPricing->getPrice() / 1000 : $channelPricing->getPrice();
-        return $returnPrice;
-
+dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+dump('calculateOrignal getOriginalPrice : '.$channelPricing->getOriginalPrice());
+            return $channelPricing->getOriginalPrice();
         }
 
         if ($channelPricing->getPrice() !== null) {
-
-            $returnPrice = $$productVariant->getProduct()->hasAttributeByCodeAndLocale('cuttype') ? $channelPricing->getPrice() / 1000 : $channelPricing->getPrice();
-        return $returnPrice;
+dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+dump('calculateoriginal getPrice : '.$channelPricing->getPrice());
+            return $channelPricing->getPrice();
         }
 
         throw MissingChannelConfigurationException::createForProductVariantChannelPricing($productVariant, $context['channel']);
