@@ -49,7 +49,12 @@ dump('ouiiiiiiiiii');
             if ($item->isImmutable()) {
                 continue;
             }
-
+            $cutType = $item->getProduct()->hasAttributeByCodeAndLocale('cuttype') ? $item->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
+            dump($cutType);
+            dump($this->productVariantPriceCalculator->calculate(
+                $item->getVariant(),
+                ['channel' => $channel],
+            ));
             $item->setUnitPrice($this->productVariantPriceCalculator->calculate(
                 $item->getVariant(),
                 ['channel' => $channel],
