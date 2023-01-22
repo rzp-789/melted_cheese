@@ -22,14 +22,15 @@ use Webmozart\Assert\Assert;
 
 final class OrderPricesRecalculator implements OrderProcessorInterface
 {
-    public function __construct(private ProductVariantPriceCalculatorInterface|ProductVariantPricesCalculatorInterface $productVariantPriceCalculator)
+    public function __construct(private ProductVariantPriceCalculatorInterface $productVariantPriceCalculator)
     {
-        if ($this->productVariantPriceCalculator instanceof ProductVariantPriceCalculatorInterface) {
-            @trigger_error(
-                sprintf('Passing a "Sylius\Component\Core\Calculator\ProductVariantPriceCalculatorInterface" to "%s" constructor is deprecated since Sylius 1.11 and will be prohibited in 2.0. Use "Sylius\Component\Core\Calculator\ProductVariantPricesCalculatorInterface" instead.', self::class),
-                \E_USER_DEPRECATED,
-            );
-        }
+        $this->productVariantPriceCalculator = $productVariantPriceCalculator;
+        // if ($this->productVariantPriceCalculator instanceof ProductVariantPriceCalculatorInterface) {
+        //     @trigger_error(
+        //         sprintf('Passing a "Sylius\Component\Core\Calculator\ProductVariantPriceCalculatorInterface" to "%s" constructor is deprecated since Sylius 1.11 and will be prohibited in 2.0. Use "Sylius\Component\Core\Calculator\ProductVariantPricesCalculatorInterface" instead.', self::class),
+        //         \E_USER_DEPRECATED,
+        //     );
+        // }
     }
 
     public function process(BaseOrderInterface $order): void

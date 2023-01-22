@@ -71,6 +71,8 @@ services:
     sylius.order_processing.order_prices:
         class: App\Component\Core\OrderProcessing\OrderPricesRecalculator
         autowire: true
+        arguments: 
+            - '@sylius.calculator.product_variant_price'
         tags:
             - { name: "sylius.order_processor", priority: 40 }
 
