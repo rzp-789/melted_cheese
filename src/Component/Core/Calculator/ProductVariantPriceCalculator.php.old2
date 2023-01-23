@@ -39,10 +39,17 @@ final class ProductVariantPriceCalculator implements ProductVariantPricesCalcula
             throw MissingChannelConfigurationException::createForProductVariantChannelPricing($productVariant, $context['channel']);
         }
 // TODO Recalcul price and put quantity to 1 ( for product cuttype )
-dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
-dump($productVariant);
-dump('calculate : '.$channelPricing->getPrice());
-        return $channelPricing->getPrice();
+// dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+// dump($productVariant);
+// dump('calculate : '.$channelPricing->getPrice());
+        //return $channelPricing->getPrice();
+        $price = $channelPricing->getPrice();
+        if($productVariant->getProduct()->isCutTypeProduct()){
+            $price = intval($price/1000);
+        }
+
+        return $price;
+        
     }
 
     /**
@@ -59,17 +66,33 @@ dump('calculate : '.$channelPricing->getPrice());
         }
 
         if (null !== $channelPricing->getOriginalPrice()) {
-dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
-dump('calculateOrignal getOriginalPrice : '.$channelPricing->getOriginalPrice());
-            return $channelPricing->getOriginalPrice();
+// dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+// dump('calculateOrignal getOriginalPrice : '.$channelPricing->getOriginalPrice());
+            //return $channelPricing->getOriginalPrice();
+            $price = $channelPricing->getOriginalPrice();
+            if($productVariant->getProduct()->isCutTypeProduct()){
+                $price = intval($price/1000);
+            }
+
+            return $price;
         }
 
         if ($channelPricing->getPrice() !== null) {
-dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
-dump('calculateoriginal getPrice : '.$channelPricing->getPrice());
-            return $channelPricing->getPrice();
+// dump($productVariant->getProduct()." type : ".$productVariant->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue());
+// dump('calculateoriginal getPrice : '.$channelPricing->getPrice());
+            //return $channelPricing->getPrice();
+            $price = $channelPricing->getPrice();
+            if($productVariant->getProduct()->isCutTypeProduct()){
+                $price = intval($price/1000);
+            }
+
+            return $price;
         }
 
         throw MissingChannelConfigurationException::createForProductVariantChannelPricing($productVariant, $context['channel']);
     }
 }
+
+
+
+   

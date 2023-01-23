@@ -19,23 +19,19 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Webmozart\Assert\Assert;
+use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 
 final class OrderPricesRecalculator implements OrderProcessorInterface
 {
-    public function __construct(private ProductVariantPriceCalculatorInterface $productVariantPriceCalculator)
+    public function __construct(private ProductVariantPriceCalculatorInterface $productVariantPriceCalculator, private OrderItemQuantityModifierInterface $quantityModifier)
     {
         $this->productVariantPriceCalculator = $productVariantPriceCalculator;
-        // if ($this->productVariantPriceCalculator instanceof ProductVariantPriceCalculatorInterface) {
-        //     @trigger_error(
-        //         sprintf('Passing a "Sylius\Component\Core\Calculator\ProductVariantPriceCalculatorInterface" to "%s" constructor is deprecated since Sylius 1.11 and will be prohibited in 2.0. Use "Sylius\Component\Core\Calculator\ProductVariantPricesCalculatorInterface" instead.', self::class),
-        //         \E_USER_DEPRECATED,
-        //     );
-        // }
+        $this->quantityModifier = $quantityModifier;
+
     }
 
     public function process(BaseOrderInterface $order): void
     {
-dump('ouiiiiiiiiii');
         /** @var OrderInterface $order */
         Assert::isInstanceOf($order, OrderInterface::class);
 
@@ -49,23 +45,41 @@ dump('ouiiiiiiiiii');
             if ($item->isImmutable()) {
                 continue;
             }
-            $cutType = $item->getProduct()->hasAttributeByCodeAndLocale('cuttype') ? $item->getProduct()->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
-            dump($cutType);
-            dump($this->productVariantPriceCalculator->calculate(
-                $item->getVariant(),
-                ['channel' => $channel],
-            ));
-            $item->setUnitPrice($this->productVariantPriceCalculator->calculate(
-                $item->getVariant(),
-                ['channel' => $channel],
-            ));
 
-            if ($this->productVariantPriceCalculator instanceof ProductVariantPricesCalculatorInterface) {
-                $item->setOriginalUnitPrice($this->productVariantPriceCalculator->calculateOriginal(
+            $cutType = $item->getProduct()->isCutTypeProduct();
+
+            if($cutType){
+                $this->reCalculForCutTypeProduct($item);
+            }else{
+                $item->setUnitPrice($this->productVariantPriceCalculator->calculate(
                     $item->getVariant(),
                     ['channel' => $channel],
                 ));
+
+                if ($this->productVariantPriceCalculator instanceof ProductVariantPricesCalculatorInterface) {
+                    $item->setOriginalUnitPrice($this->productVariantPriceCalculator->calculateOriginal(
+                        $item->getVariant(),
+                        ['channel' => $channel],
+                    ));
+                }
             }
+
         }
+    }
+
+    public function reCalculForCutTypeProduct($item)
+    {
+        // Condition to avoid multi call function on same event
+        if($item->getQuantity() != 1) {
+            $weight = $item->getQuantity()/1000;
+            // Condition if product is already selected and modify weight
+            if(!empty($item->getWeight()) ) {
+                $weight = $item->getWeight() + $weight - 0.001;
+            }
+            $item->setWeight($weight);
+            $item->setUnitPrice(intval($item->getVariant()->getChannelPricings()->getValues()[0]->getPrice() * $item->getWeight()));
+            $this->quantityModifier->modify($item, 1);
+        }
+
     }
 }

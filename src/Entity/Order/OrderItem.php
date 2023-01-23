@@ -21,7 +21,7 @@ class OrderItem extends BaseOrderItem
     /**
      * Get the value of weight
      */ 
-    public function getWeight()
+    public function getWeight(): ?float
     {
         return $this->weight;
     }
@@ -31,15 +31,11 @@ class OrderItem extends BaseOrderItem
      *
      * @return  self
      */
-    public function setWeight(?float $weight)
+    public function setWeight(?float $weight): self
     {
         $this->weight = $weight;
 
         return $this;
     }
 
-    public function getPriceByWeight(): int
-    {
-        return $this->weight * $this->unitPrice;
-    }
 }

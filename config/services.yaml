@@ -76,6 +76,14 @@ services:
         tags:
             - { name: "sylius.order_processor", priority: 40 }
 
+    # sylius.modifier.order_item_quantity:
+    #     class: App\Component\Order\Modifier\OrderItemQuantityModifier
+    #     autowire: true
+    #     arguments: 
+    #         - '@sylius.calculator.product_variant_price'
+    #     tags:
+    #         - { name: "sylius.order_processor", priority: 40 }
+
     # App\Fixtures\Suite\MeltedCheeseSuiteRegistryDecorator:
     #     decorates: 'sylius_fixtures.suite_registry'
     #     arguments:
