@@ -200,8 +200,8 @@ class ShopConfigurationFixtures extends Fixture
         $gateway = $this->container->get('sylius.factory.gateway_config')->createNew();
 
         $gateway->setConfig([]);
-        $gateway->setGatewayName('gateway');
-        $gateway->setFactoryName('gateway_name');
+        $gateway->setGatewayName('offline');
+        $gateway->setFactoryName('offline');
 
         $this->container->get('sylius.repository.gateway_config')->add($gateway);
 

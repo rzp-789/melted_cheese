@@ -76,6 +76,12 @@ services:
         tags:
             - { name: "sylius.order_processor", priority: 40 }
 
+    app.newsletter_promotion.listener:
+        class: App\EventListener\AddNewsletterPromotionListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.order.post_address, method: addNewsletterPromotion }
+
+
     # sylius.modifier.order_item_quantity:
     #     class: App\Component\Order\Modifier\OrderItemQuantityModifier
     #     autowire: true
