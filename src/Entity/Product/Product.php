@@ -18,4 +18,9 @@ class Product extends BaseProduct
     {
         return new ProductTranslation();
     }
+
+    public function isCutTypeProduct()
+    {
+        return $this->hasAttributeByCodeAndLocale('cuttype') ? $this->getAttributeByCodeAndLocale('cuttype')->getValue() : false;
+    }
 }

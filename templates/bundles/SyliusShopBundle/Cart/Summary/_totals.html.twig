@@ -3,7 +3,6 @@
 {% set itemsSubtotal = sylius_order_items_subtotal(cart) %}
 {% set taxIncluded = cart.getTaxIncludedTotal() %}
 {% set taxExcluded = cart.getTaxExcludedTotal() %}
-
 <div class="ui segment">
     <h2 class="ui dividing header">{{ 'sylius.ui.summary'|trans }}</h2>
 
@@ -17,7 +16,7 @@
         </tr>
         {% if cart.orderPromotionTotal %}
             <tr>
-                <td>{{ 'sylius.ui.discount'|trans }}:<td>
+                <td>{{ 'sylius.ui.discount'|trans }}:</td>
                 <td id="sylius-cart-promotion-total" {{ sylius_test_html_attribute('cart-promotion-total') }} class="right aligned">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</td>
             </tr>
         {% endif %}
@@ -36,15 +35,15 @@
             <td>{{ 'sylius.ui.taxes_total'|trans }}:</td>
             <td class="right aligned">
                 {% if not taxIncluded and not taxExcluded %}
-                    <div id="sylius-cart-tax-none" {{ sylius_test_html_attribute('cart-no-tax') }}>{{ money.convertAndFormat(0) }}</div>
+                    <div id="sylius-cart-tax-none" {{ sylius_test_html_attribute('cart-no-tax') }}>{{ money.convertAndFormat(0) }}Cart1</div>
                 {% endif %}
-                {% if taxExcluded  %}
-                    <div id="sylius-cart-tax-excluded" {{ sylius_test_html_attribute('cart-tax-exluded') }}>{{ money.convertAndFormat(taxExcluded) }}</div>
+                {% if taxExcluded %}
+                    <div id="sylius-cart-tax-excluded" {{ sylius_test_html_attribute('cart-tax-exluded') }}>{{ money.convertAndFormat(taxExcluded) }}Cart2</div>
                 {% endif %}
                 {% if taxIncluded %}
                     <div class="tax-disabled">
                         <small>({{ 'sylius.ui.included_in_price'|trans }})</small>
-                        <span id="sylius-cart-tax-included" {{ sylius_test_html_attribute('cart-tax-included') }}>{{ money.convertAndFormat(taxIncluded) }}</span>
+                        <span id="sylius-cart-tax-included" {{ sylius_test_html_attribute('cart-tax-included') }}>{{ money.convertAndFormat(taxIncluded) }}Cart3</span>
                     </div>
                 {% endif %}
             </td>
@@ -62,3 +61,4 @@
         </tbody>
     </table>
 </div>
+
