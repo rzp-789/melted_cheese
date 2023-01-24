@@ -42,11 +42,11 @@ final class OrderPricesRecalculator implements OrderProcessorInterface
         $channel = $order->getChannel();
 
         foreach ($order->getItems() as $item) {
-            if ($item->isImmutable()) {
+            $cutType = $item->getProduct()->isCutTypeProduct();
+
+            if ($item->isImmutable() && !$cutType) {
                 continue;
             }
-
-            $cutType = $item->getProduct()->isCutTypeProduct();
 
             if($cutType){
                 $this->reCalculForCutTypeProduct($item);
@@ -78,6 +78,7 @@ final class OrderPricesRecalculator implements OrderProcessorInterface
             }
             $item->setWeight($weight);
             $item->setUnitPrice(intval($item->getVariant()->getChannelPricings()->getValues()[0]->getPrice() * $item->getWeight()));
+            $item->setImmutable(true);
             $this->quantityModifier->modify($item, 1);
         }
 
