@@ -36,8 +36,6 @@ final class AddNewsletterPromotionListener
             $customerGroup = $this->container->get('sylius.repository.customer_group')->findOneBy(['code' => self::NEWSLETTER_CUSTOMER_GROUP]);
             $customer->setGroup($customerGroup);
 
-            $this->entityManager->persist($customer);
-            $this->entityManager->flush();
         }
 
     }

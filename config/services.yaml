@@ -79,7 +79,7 @@ services:
     app.newsletter_promotion.listener:
         class: App\EventListener\AddNewsletterPromotionListener
         tags:
-            - { name: kernel.event_listener, event: sylius.order.post_address, method: addNewsletterPromotion }
+            - { name: kernel.event_listener, event: sylius.order.pre_address, method: addNewsletterPromotion }
 
 
     # sylius.modifier.order_item_quantity:
